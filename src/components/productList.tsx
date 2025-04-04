@@ -32,19 +32,43 @@ export default function ProductList() {
   const [createProduct] = useMutation<
     CreateProductMutation,
     CreateProductMutationVariables
-  >(CREATE_PRODUCT);
+  >(CREATE_PRODUCT, {
+    onCompleted: () => {
+      refetch();
+      Swal.fire("Created!", "Product has been added.", "success");
+    },
+    onError: (error) => {
+      Swal.fire("Error", error.message, "error");
+    },
+  });
 
   const [deleteProduct] = useMutation<
     DeleteProductMutation,
     DeleteProductMutationVariables
-  >(DELETE_PRODUCT);
+  >(DELETE_PRODUCT, {
+    onCompleted: () => {
+      refetch();
+      Swal.fire("Deleted!", "Product has been removed.", "success");
+    },
+    onError: (error) => {
+      Swal.fire("Error", error.message, "error");
+    },
+  });
   const [getProduct] = useLazyQuery<GetProductQuery, GetProductQueryVariables>(
     GET_PRODUCT
   );
   const [updateProduct] = useMutation<
     UpdateProductMutation,
     UpdateProductMutationVariables
-  >(UPDATE_PRODUCT);
+  >(UPDATE_PRODUCT, {
+    onCompleted: () => {
+      refetch();
+      Swal.fire("Updated!", "Product has been updated.", "success");
+    },
+    onError: (error) => {
+      Swal.fire("Error", error.message, "error");
+    },
+  });
   const handleCreate = async () => {
     const { value: formValues } = await Swal.fire({
       title: "Create Product",
@@ -72,13 +96,7 @@ export default function ProductList() {
     });
 
     if (formValues) {
-      try {
-        await createProduct({ variables: { data: formValues } });
-        await refetch();
-        Swal.fire("Created!", "Product has been added.", "success");
-      } catch (err: any) {
-        Swal.fire("Error", err.message, "error");
-      }
+      await createProduct({ variables: { data: formValues } });
     }
   };
 
@@ -119,15 +137,9 @@ export default function ProductList() {
     });
 
     if (confirmed.isConfirmed) {
-      try {
-        await deleteProduct({
-          variables: { id },
-        });
-        await refetch(); // Refresh the list after deletion
-        Swal.fire("Deleted!", "Product has been removed.", "success");
-      } catch (err: any) {
-        Swal.fire("Error", err.message, "error");
-      }
+      await deleteProduct({
+        variables: { id },
+      });
     }
   };
   const handleUpdate = async (product: Product) => {
@@ -177,18 +189,12 @@ export default function ProductList() {
         return;
       }
 
-      try {
-        await updateProduct({
-          variables: {
-            id: product.id,
-            data: updatedData,
-          },
-        });
-        await refetch();
-        Swal.fire("Updated!", "Product has been updated.", "success");
-      } catch (err: any) {
-        Swal.fire("Error", err.message, "error");
-      }
+      await updateProduct({
+        variables: {
+          id: product.id,
+          data: updatedData,
+        },
+      });
     }
   };
   if (loading)
