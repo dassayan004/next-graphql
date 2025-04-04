@@ -9,7 +9,14 @@ const plugins = [
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "http://localhost:5000/graphql",
+  schema: {
+    "http://localhost:5000/graphql": {
+      // If your backend is protected, add headers here
+      // headers: {
+      //   Authorization: "Bearer YOUR_TOKEN",
+      // },
+    },
+  },
   documents: "src/**/*.{ts,tsx}",
   generates: {
     "./src/graphql/__generated__/types.ts": {
@@ -17,7 +24,6 @@ const config: CodegenConfig = {
       config: {
         useTypeImports: true, // Uses `import type` instead of `import`
         strictScalars: true, // Ensures strict typing for scalars
-        avoidOptionals: true, // Prevents unnecessary `?` in types
         dedupeFragments: true, // Avoids duplicate fragments
         scalars: {
           DateTime: "string",

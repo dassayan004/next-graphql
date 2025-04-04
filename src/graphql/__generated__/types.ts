@@ -74,8 +74,8 @@ export type QueryProductArgs = {
 };
 
 export type UpdateProductInput = {
-  desc: InputMaybe<Scalars["String"]["input"]>;
-  name: InputMaybe<Scalars["String"]["input"]>;
+  desc?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type GetAllProductsQueryVariables = Exact<{ [key: string]: never }>;

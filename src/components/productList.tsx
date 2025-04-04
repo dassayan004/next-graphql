@@ -181,7 +181,7 @@ export default function ProductList() {
         await updateProduct({
           variables: {
             id: product.id,
-            data: updatedData as UpdateProductInput,
+            data: updatedData,
           },
         });
         await refetch();
