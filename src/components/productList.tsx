@@ -191,7 +191,8 @@ export default function ProductList() {
       }
     }
   };
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return <img src="/globe.svg" alt="" className="size-40 animate-spin" />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
