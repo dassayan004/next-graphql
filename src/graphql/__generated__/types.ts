@@ -63,6 +63,11 @@ export type Product = {
   updatedAt: Scalars["DateTime"]["output"];
 };
 
+export type ProductFilterInput = {
+  desc?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type Query = {
   __typename?: "Query";
   product: Product;
@@ -73,12 +78,18 @@ export type QueryProductArgs = {
   id: Scalars["ID"]["input"];
 };
 
+export type QueryProductsArgs = {
+  filter?: InputMaybe<ProductFilterInput>;
+};
+
 export type UpdateProductInput = {
   desc?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type GetAllProductsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetAllProductsQueryVariables = Exact<{
+  filter?: InputMaybe<ProductFilterInput>;
+}>;
 
 export type GetAllProductsQuery = {
   __typename?: "Query";
@@ -172,12 +183,35 @@ export const GetAllProductsDocument = {
       kind: "OperationDefinition",
       operation: "query",
       name: { kind: "Name", value: "GetAllProducts" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "filter" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "ProductFilterInput" },
+          },
+        },
+      ],
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
             name: { kind: "Name", value: "products" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "filter" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "filter" },
+                },
+              },
+            ],
             selectionSet: {
               kind: "SelectionSet",
               selections: [

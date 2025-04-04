@@ -1,74 +1,21 @@
 "use client";
 
-import {
-  CreateProductMutation,
-  CreateProductMutationVariables,
-  DeleteProductMutation,
-  DeleteProductMutationVariables,
-  GetAllProductsQuery,
-  GetAllProductsQueryVariables,
-  GetProductQuery,
-  GetProductQueryVariables,
-  Product,
-  UpdateProductInput,
-  UpdateProductMutation,
-  UpdateProductMutationVariables,
-} from "@/graphql/__generated__/types";
-import {
-  GET_ALL_PRODUCTS,
-  DELETE_PRODUCT,
-  GET_PRODUCT,
-  UPDATE_PRODUCT,
-  CREATE_PRODUCT,
-} from "@/services/fetchService";
-import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
+import { Product, UpdateProductInput } from "@/graphql/__generated__/types";
+import { useProducts } from "@/graphql/hooks/useProduct";
+import { useState } from "react";
 import Swal from "sweetalert2"; // Optional for better alerts
 
 export default function ProductList() {
-  const { data, loading, error, refetch } = useQuery<
-    GetAllProductsQuery,
-    GetAllProductsQueryVariables
-  >(GET_ALL_PRODUCTS);
-  const [createProduct] = useMutation<
-    CreateProductMutation,
-    CreateProductMutationVariables
-  >(CREATE_PRODUCT, {
-    onCompleted: () => {
-      refetch();
-      Swal.fire("Created!", "Product has been added.", "success");
-    },
-    onError: (error) => {
-      Swal.fire("Error", error.message, "error");
-    },
-  });
-
-  const [deleteProduct] = useMutation<
-    DeleteProductMutation,
-    DeleteProductMutationVariables
-  >(DELETE_PRODUCT, {
-    onCompleted: () => {
-      refetch();
-      Swal.fire("Deleted!", "Product has been removed.", "success");
-    },
-    onError: (error) => {
-      Swal.fire("Error", error.message, "error");
-    },
-  });
-  const [getProduct] = useLazyQuery<GetProductQuery, GetProductQueryVariables>(
-    GET_PRODUCT
-  );
-  const [updateProduct] = useMutation<
-    UpdateProductMutation,
-    UpdateProductMutationVariables
-  >(UPDATE_PRODUCT, {
-    onCompleted: () => {
-      refetch();
-      Swal.fire("Updated!", "Product has been updated.", "success");
-    },
-    onError: (error) => {
-      Swal.fire("Error", error.message, "error");
-    },
-  });
+  const {
+    products,
+    loadingAll,
+    error,
+    refetch,
+    createProduct,
+    deleteProduct,
+    updateProduct,
+    getProduct,
+  } = useProducts();
   const handleCreate = async () => {
     const { value: formValues } = await Swal.fire({
       title: "Create Product",
@@ -197,13 +144,18 @@ export default function ProductList() {
       });
     }
   };
-  if (loading)
-    return <img src="/globe.svg" alt="" className="size-40 animate-spin" />;
-  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <>
-      <div className="mb-4">
+      <div className="mb-4 flex gap-2">
+        {/* <input
+          type="search"
+          placeholder="Search products..."
+          value={search || ""}
+          onChange={handleSearch}
+          className="border p-2 rounded w-full"
+        /> */}
+
         <button
           onClick={handleCreate}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
@@ -211,9 +163,16 @@ export default function ProductList() {
           + Create Product
         </button>
       </div>
-      <ul>
-        {data?.products?.map((product) =>
-          product ? (
+
+      {loadingAll ? (
+        <img src="/globe.svg" alt="" className="size-40 animate-spin" />
+      ) : error ? (
+        <p>Error: {error.message}</p>
+      ) : products.length === 0 ? (
+        <p>No products available.</p>
+      ) : (
+        <ul>
+          {products.map((product) => (
             <li key={product.id} className="mb-2">
               <strong>{product.name}</strong>: {product.desc}
               <div className="flex gap-2 mt-1">
@@ -237,9 +196,9 @@ export default function ProductList() {
                 </button>
               </div>
             </li>
-          ) : null
-        )}
-      </ul>
+          ))}
+        </ul>
+      )}
     </>
   );
 }
