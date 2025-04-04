@@ -1,0 +1,11 @@
+schema: "http://localhost:5000/graphql"
+documents: "src/**/*.{ts,tsx}"
+extensions:
+  codegen:
+    config:
+      useTypeImports: true
+      strictScalars: true
+      avoidOptionals: true
+      dedupeFragments: true
+      scalars:
+        DateTime: "string"

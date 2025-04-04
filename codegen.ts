@@ -14,6 +14,15 @@ const config: CodegenConfig = {
   generates: {
     "./src/graphql/__generated__/types.ts": {
       plugins,
+      config: {
+        useTypeImports: true, // Uses `import type` instead of `import`
+        strictScalars: true, // Ensures strict typing for scalars
+        avoidOptionals: true, // Prevents unnecessary `?` in types
+        dedupeFragments: true, // Avoids duplicate fragments
+        scalars: {
+          DateTime: "string",
+        },
+      },
     },
   },
 };

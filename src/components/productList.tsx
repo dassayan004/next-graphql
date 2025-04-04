@@ -10,6 +10,7 @@ import {
   GetProductQuery,
   GetProductQueryVariables,
   Product,
+  UpdateProductInput,
   UpdateProductMutation,
   UpdateProductMutationVariables,
 } from "@/graphql/__generated__/types";
@@ -161,7 +162,7 @@ export default function ProductList() {
     });
 
     if (formValues) {
-      const updatedData: Record<string, string> = {};
+      const updatedData: Partial<UpdateProductInput> = {};
 
       if (formValues.name !== product.name) {
         updatedData.name = formValues.name;
@@ -180,7 +181,7 @@ export default function ProductList() {
         await updateProduct({
           variables: {
             id: product.id,
-            data: updatedData,
+            data: updatedData as UpdateProductInput,
           },
         });
         await refetch();

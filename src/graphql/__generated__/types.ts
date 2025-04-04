@@ -1,4 +1,4 @@
-import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -26,7 +26,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  DateTime: { input: any; output: any };
+  DateTime: { input: string; output: string };
 };
 
 export type CreateProductInput = {
@@ -74,8 +74,8 @@ export type QueryProductArgs = {
 };
 
 export type UpdateProductInput = {
-  desc?: InputMaybe<Scalars["String"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  desc: InputMaybe<Scalars["String"]["input"]>;
+  name: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type GetAllProductsQueryVariables = Exact<{ [key: string]: never }>;
@@ -101,8 +101,8 @@ export type GetProductQuery = {
     id: string;
     name: string;
     desc: string;
-    createdAt: any;
-    updatedAt: any;
+    createdAt: string;
+    updatedAt: string;
   };
 };
 
@@ -117,8 +117,8 @@ export type CreateProductMutation = {
     id: string;
     name: string;
     desc: string;
-    createdAt: any;
-    updatedAt: any;
+    createdAt: string;
+    updatedAt: string;
   };
 };
 
@@ -134,8 +134,8 @@ export type UpdateProductMutation = {
     id: string;
     name: string;
     desc: string;
-    createdAt: any;
-    updatedAt: any;
+    createdAt: string;
+    updatedAt: string;
   };
 };
 
